@@ -59,27 +59,16 @@ pipeline {
 stage("Build & Push Docker Image") {
     steps {
         script {
-            // Ensure the WAR file is present
-            sh '''
-                if ls webapp/target/*.war 1> /dev/null 2>&1; then
-                    cp webapp/target/*.war .
-                else
-                    echo "ERROR: WAR file not found in webapp/target/"
-                    exit 1
-                fi
-            '''
+            sh 'cp webapp/target/*.war .'
 
-            // Build and push Docker image
             docker.withRegistry('', DOCKER_PASS) {
-                def docker_image = docker.build("${IMAGE_NAME}")
+                docker_image = docker.build("${IMAGE_NAME}")
                 docker_image.push("${IMAGE_TAG}")
                 docker_image.push('latest')
             }
         }
     }
 }
-
-
 
     }
 }
