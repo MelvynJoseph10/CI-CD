@@ -56,14 +56,14 @@ pipeline {
             }
         }
 
-        stage("Build & Push Docker Image") {
 stage("Build & Push Docker Image") {
     steps {
         script {
-            sh 'cp webapp/target/*.war .'
-
             docker.withRegistry('', DOCKER_PASS) {
                 docker_image = docker.build("${IMAGE_NAME}")
+            }
+
+            docker.withRegistry('', DOCKER_PASS) {
                 docker_image.push("${IMAGE_TAG}")
                 docker_image.push('latest')
             }
@@ -71,7 +71,6 @@ stage("Build & Push Docker Image") {
     }
 }
 
-}
 
     }
 }
